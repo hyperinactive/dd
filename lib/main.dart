@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import './questions.dart';
-import './answer.dart';
+import 'package:sqa/result.dart';
+import './quiz.dart';
 
 void main() {
   runApp(MyApp());
@@ -18,6 +18,7 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   int _questionIndex = 0;
+  int _totalScore = 0;
   // var questions = [
   //   'Why did she leave me?',
   //   'How to fix a failing relationship?',
@@ -27,24 +28,37 @@ class _MyAppState extends State<MyApp> {
   // using maps for demonstration purposes, doing it via class more traditional approach
   // managing key-values pairs instead of props
   // just a list of maps
-  static const questions = [
+  static const _questions = [
     {
       'questionText': 'Why did she leave me?',
-      'answers': ['No car', 'No income', 'Yes']
+      'answers': [
+        {'text': 'No car', 'score': 1},
+        {'text': 'No income', 'score': 1},
+        {'text': 'Yes', 'score': 2}
+      ]
     },
     {
       'questionText': 'How to fix a failing relationship?',
-      'answers': ['No shot', 'LMAO', 'Bandaid']
+      'answers': [
+        {'text': 'No shot', 'score': 1},
+        {'text': 'LMAO', 'score': 2},
+        {'text': 'No car', 'score': 0}
+      ]
     },
     {
       'questionText': 'How to escape existantial dred?',
-      'answers': ['Nah', 'Nope', 'No']
+      'answers': [
+        {'text': 'Nah', 'score': 1},
+        {'text': 'No car', 'score': 0},
+        {'text': 'No', 'score': 2}
+      ]
     },
   ];
 
-  void _answer() {
+  void _answer(int score) {
     setState(() {
       _questionIndex++;
+      _totalScore += score;
     });
   }
 
@@ -60,35 +74,14 @@ class _MyAppState extends State<MyApp> {
         // notation good practice <Widget>[]
 
         // can use ternary op to display widgets conditionally
-        body: _questionIndex < questions.length
-            ? Column(
-                children: [
-                  // Text(questions[_questionIndex]),
-                  // now that Question widget is created, replace Text with it
-                  Question(questions[_questionIndex]['questionText']),
-
-                  // can insert Widgets via map function like javascript
-                  // dart cannot know what type the map values are, so gotta use "as"
-                  // as List<String> -> promising dart that I know for sure I have a list of strings under "answers" keyword
-
-                  // getting the <Iterable> class and not List, so map doesn't work ->  .toList()
-
-                  // other problem, Collumn takes a list of Widgets, but we're giving it a list -> nesting lists basically
-                  // that won't do so we use the spread operator, make a copy this list's values so we end up with individual items
-                  ...(questions[_questionIndex]['answers'] as List<String>)
-                      .map((answer) {
-                    return Answer(_answer, answer);
-                  }).toList()
-                  // Answer(_answer),
-                  // Answer(_answer),
-                  // Answer(_answer),
-                ],
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                answerQ: _answer,
+                questions: _questions,
+                questionIndex: _questionIndex,
               )
-            : Center(
-                child: Text(
-                  'Thanks for answering!',
-                  style: TextStyle(fontSize: 28),
-                ),
+            : Result(
+                resultScore: _totalScore,
               ),
       ),
     );
