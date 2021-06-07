@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class Result extends StatelessWidget {
   final int resultScore;
+  final Function resetFn;
 
-  Result({this.resultScore});
+  Result({this.resultScore, this.resetFn});
 
   // getter function
   String get resultPhrase {
@@ -20,9 +21,22 @@ class Result extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Text(
-        resultPhrase,
-        style: TextStyle(fontSize: 28),
+      // refectoring can wrap widgets, very useful
+      child: Column(
+        children: [
+          Text(
+            resultPhrase,
+            style: TextStyle(fontSize: 28),
+          ),
+          TextButton(
+            onPressed: resetFn,
+            child: Text(
+              'Restart!',
+            ),
+            style: ButtonStyle(
+                foregroundColor: MaterialStateProperty.all(Colors.pink)),
+          ),
+        ],
       ),
     );
   }

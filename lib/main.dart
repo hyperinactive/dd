@@ -19,15 +19,7 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   int _questionIndex = 0;
   int _totalScore = 0;
-  // var questions = [
-  //   'Why did she leave me?',
-  //   'How to fix a failing relationship?',
-  //   'How to escape existantial dred?'
-  // ];
 
-  // using maps for demonstration purposes, doing it via class more traditional approach
-  // managing key-values pairs instead of props
-  // just a list of maps
   static const _questions = [
     {
       'questionText': 'Why did she leave me?',
@@ -62,6 +54,13 @@ class _MyAppState extends State<MyApp> {
     });
   }
 
+  void _reset() {
+    setState(() {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
   @override // java decorator, good practice
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -69,11 +68,6 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text('This be a tittle'),
         ),
-        // to put multiple widgets, need to use some layout widget first
-        // Column expects an array of widgets (Java structure esq)
-        // notation good practice <Widget>[]
-
-        // can use ternary op to display widgets conditionally
         body: _questionIndex < _questions.length
             ? Quiz(
                 answerQ: _answer,
@@ -82,6 +76,7 @@ class _MyAppState extends State<MyApp> {
               )
             : Result(
                 resultScore: _totalScore,
+                resetFn: _reset,
               ),
       ),
     );
